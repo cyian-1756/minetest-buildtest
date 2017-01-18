@@ -10,6 +10,8 @@ dofile(minetest.get_modpath("buildtest").."/pipes/emriald.lua")
 dofile(minetest.get_modpath("buildtest").."/pipes/gate.lua")
 dofile(minetest.get_modpath("buildtest").."/pipes/stripe.lua")
 dofile(minetest.get_modpath("buildtest").."/pipes/mesecon.lua")
+dofile(minetest.get_modpath("buildtest").."/pipes/water_proofing.lua")
+
 
 dofile(minetest.get_modpath("buildtest").."/pipes/diamese.lua")
 dofile(minetest.get_modpath("buildtest").."/pipes/mese.lua")

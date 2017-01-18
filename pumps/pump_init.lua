@@ -85,7 +85,7 @@ buildtest.pumps.send_power = function(pipepos, speed, movecount)
 				if strs:starts(minetest.get_node(pipepos).name, "buildtest:pipe_wood_") or pipeinv:contains_item("main", {name = cell.name}) then
 					local move = math.min(cell.count,
 							movecount)
-					
+
 					tosend=ItemStack(cell):to_table()
 					tosend.count = 1
 					numitems = move
@@ -127,7 +127,7 @@ buildtest.pumps.send_power = function(pipepos, speed, movecount)
 		if itemName~="air" and itemName~="ignore" then
 --			print("currently cutting: "..itemName)
 			local drops = minetest.get_node_drops(itemName, "default:pick_mese")--minetest.registered_nodes[itemName].drop
-			
+
 			for _,item in ipairs(drops) do
 				local count, name
 				if type(item) == "string" then
@@ -137,14 +137,14 @@ buildtest.pumps.send_power = function(pipepos, speed, movecount)
 					count = item:get_count()
 					name = item:get_name()
 				end
-				
+
 				local entity = buildtest.makeEnt(pipepos, {name = name, count = count}, speed, pipepos)
 				if entity then
 					entity:setpos(chestpos)
 					entity:setvelocity({x=0, y=0-speed, z=0})
 				end
 			end
-			
+
 			minetest.set_node(chestpos, {name = "air"})
 			nodeupdate(chestpos)
 		end
@@ -186,7 +186,7 @@ buildtest.pumps.register_pump = function(name, textureBase, flags, def)
 					runConf = def.runConf,
 					explodes = def.explodes or false,
 					canHeat = def.canHeat,
-					
+
 --					textures = {
 --						"buildtest_pump_mesecon.png",
 --						"buildtest_pump_blue.png",
@@ -255,7 +255,7 @@ buildtest.pumps.register_pump = function(name, textureBase, flags, def)
 			def.buildtest.pump.prev=nil
 		end
 		minetest.register_node(name.."_"..typeName, def)
-		
+
 		minetest.register_abm({
 			nodenames = {name.."_"..typeName},
 			interval = 0.5,
@@ -279,22 +279,22 @@ buildtest.pumps.send = function(pos)
 	local pipepos = vector.add(pos, minetest.facedir_to_dir(node.param2))--buildtest.pumps.findpipe(pos)  --{x=pos.x,y=pos.y+1,z=pos.z}
 	local speedup = 0
 	local thisMeta = minetest.get_meta(pos)
-	
+
 	if thisMeta:get_int("on")~=1 then
 		buildtest.pumps.temp(pos, "prev")
 		return
 	end
-	
+
 	local def = minetest.registered_items[node.name]
 	if def.buildtest.pump~=nil then
-		
+
 		if def.buildtest.pump.runConf~=nil then
 			if def.buildtest.pump.runConf(pos)==false then
 				buildtest.pumps.temp(pos, "prev")
 				return
 			end
 		end
-		
+
 		local timerCount = thisMeta:get_int("timer") or 0
 		--if timerCount==nil then timerCount=0 end
 		timerCount = timerCount + 1
@@ -320,7 +320,7 @@ buildtest.pumps.send = function(pos)
 		local canHeat = false
 		if timerCount >= def.buildtest.pump.upTime then
 			canHeat = true
-			
+
 			for name,value in pairs(minetest.luaentities) do
 				if strs:starts(value.name, "buildtest:") and value.homepos==pos then -- :get_luaentity()
 					value:remove()
@@ -350,9 +350,9 @@ buildtest.pumps.send = function(pos)
 		end
 		thisMeta:set_int("timer", timerCount)
 	end
-	
+
 	--if not buildtest.pipeAt(pipepos) then return end
-	
+
 	--local speed = thisMeta:get_int("level") or 1
 	local speed = def.buildtest.pump.stepSpeed
 	--minetest.set_node(chestpos, {name="default:cobble"})
@@ -360,9 +360,9 @@ buildtest.pumps.send = function(pos)
 	if thisMeta:get_int("timer") % (#buildtest.pumps.colours + 1 - speed) ~= 0 then
 		return
 	end
-	
+
 	buildtest.pumps.send_power(pipepos, speed, def.buildtest.pump.moveCount)
-	
+
 	--thisMeta:set_int("speedup", speedup)
 end
 
@@ -378,6 +378,7 @@ end
 
 buildtest.makeEnt = function(pos, tosend, speed, from)
 	if from==nil then from=pos end
+    -- If speed is less than 1 set to 1
 	if speed < 1 then speed = 1 end
 	local entity=minetest.add_entity(pos, "buildtest:entity_flat")
 	if entity then
@@ -409,11 +410,11 @@ buildtest.pumps.on_construct = function(pos, texture, speed)
 ----		ent:get_luaentity().homename = minetest.get_node(pos).name
 ----		ent:get_luaentity().reset = true
 --	end
-	
+
 	local ppos = vector.subtract(buildtest.pumps.findpipe(pos), pos)
 	local facedir = minetest.dir_to_facedir(ppos, true)
 	local node = minetest.get_node(pos)
-	
+
 	if facedir~=node.param2 then
 		node.param2 = facedir
 		minetest.set_node(pos, node)
@@ -423,5 +424,5 @@ end
 dofile(minetest.get_modpath("buildtest").."/pumps/graphics/init.lua")
 dofile(minetest.get_modpath("buildtest").."/pumps/mesecon.lua")
 dofile(minetest.get_modpath("buildtest").."/pumps/sterling.lua")
---dofile(minetest.get_modpath("buildtest").."/pumps/pump.lua")
+dofile(minetest.get_modpath("buildtest").."/pumps/pump.lua")
 dofile(minetest.get_modpath("buildtest").."/pumps/combustion.lua")

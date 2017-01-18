@@ -1,3 +1,4 @@
+-- 000000_0 is normal pipes
 for name, val in pairs(buildtest.pipes.types) do
 	minetest.register_craft({
 		output = (val.outname or ("buildtest:pipe_" .. name .. "_000000_0")),
@@ -5,6 +6,18 @@ for name, val in pairs(buildtest.pipes.types) do
 			{val.base, "default:glass", val.base},
 		}
 	})
+end
+-- 000000_1 is waterproof pipes
+for name, val in pairs(buildtest.pipes.types) do
+    if name ~= "wood" then
+        minetest.register_craft({
+    		output = (("buildtest:pipe_" .. name .. "_000000_1")),
+    		recipe = {
+    			{"buildtest:pipe_" .. name .. "_000000_0", "", ""},
+                {"buildtest:pipe_water_proofing", "", ""},
+    		}
+    	})
+    end
 end
 
 for name, val in pairs({
@@ -33,7 +46,7 @@ for name, val in pairs({
 		description = name.." gear",
 		inventory_image = "buildtest_gear_"..name..".png",
 	})
-	
+
 	minetest.register_craft({
 		output = "buildtest:gear_"..name,
 		recipe = {
@@ -77,3 +90,18 @@ minetest.register_craft({
 		{"mesecons_torch:mesecon_torch_on"},
 	}
 })
+
+minetest.register_craft({
+    type = "cooking",
+	output = "buildtest:pipe_water_proofing",
+	recipe = "default:cactus",
+	cooktime = 10,
+})
+
+minetest.register_craft({
+    output = "buildtest:glass_liquid_tank_0",
+    recipe = {
+        {"default:glass", "default:glass", "default:glass"},
+        {"default:glass",              "", "default:glass"},
+        {"default:glass", "default:glass", "default:glass"}
+    }})

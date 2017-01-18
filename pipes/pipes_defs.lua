@@ -62,7 +62,7 @@ buildtest.pipes.makepipe = function(go)
 end
 
 buildtest.pipes.onp_funct = function(itemstack, placer, pointed_thing)
-	
+
 	local itemstk=minetest.item_place(itemstack, placer, pointed_thing)
 	buildtest.pipes.processNode(pointed_thing.above)
 	for i=1,6 do
@@ -84,7 +84,7 @@ end
 
 buildtest.pipes.ond_funct = function(pos, node, digger)
 	minetest.node_dig(pos, node, digger)
-	
+
 	for i=1,6 do
 		buildtest.pipes.processNode(buildtest.posADD(pos,buildtest.toXY(i)))
 	end
@@ -95,12 +95,12 @@ buildtest.pipes.processNode=function(pos)
 	if buildtest.pipeAt(pos)==false then
 		return
 	end
-	
+
 	local j={}
 	for i=1,6 do
 		j[i]=buildtest.pipeConn(buildtest.posADD(pos,buildtest.toXY(i)), pos, true)
 	end
-	
+
 	local node = minetest.get_node(pos)
 	if strs:starts(node.name, "buildtest:pipe_")==true then
 		local param2 = node.param2
@@ -177,18 +177,18 @@ buildtest.pipeConn = function(pos, refpos, visual)
 				if buildtest.pipes.pipeInArray(firstName, def.buildtest.disconnects[i])==true then return false end
 			end
 		end
-		
+
 		local conn=2
 		for i=1,#def.buildtest.connects do
 			if buildtest.pipes.pipeInArray(firstName, def.buildtest.connects[i])==true then break end
 			if i==#def.buildtest.connects then conn=conn-1 end
 		end
-		
+
 		if buildtest.canPumpInto[firstName]~=nil and def.buildtest.autoconnect~=false then
 			conn=conn+1
 		end
-		
-		
+
+
 		if visual==true then
 			for i=1,#def.buildtest.vconnects do
 				if buildtest.pipes.pipeInArray(firstName, def.buildtest.vconnects[i])==true then break end
@@ -197,12 +197,12 @@ buildtest.pipeConn = function(pos, refpos, visual)
 		else
 			conn=conn-1
 		end
-		
+
 		if conn==0 then
 			return false
 		end
-		
-		
+
+
 		if firstDef~=nil then
 			if firstDef.buildtest~=nil then
 				if def.buildtest.pipe_groups~=nil and firstDef.buildtest.pipe_groups~=nil then
@@ -292,4 +292,6 @@ buildtest.pipes.defaultPipes = {
 	"buildtest:pipe_gold",
 	"buildtest:pipe_gate",
 	--"buildtest:pipe_emr",
+    ----------- BT TANKS
+
 }
